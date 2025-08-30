@@ -1,0 +1,15 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Compressor pump speed",
+    "sv": "Kompressorpump hastighet"
+  },
+  "getable": true,
+  "setable": false,
+  "units": { "en": "%" },
+  "min": 0,
+  "max": 100,
+  "decimals": 0,
+  "insights": true,
+  "icon": "/assets/pump.svg"
+}

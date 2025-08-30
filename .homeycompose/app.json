@@ -7,10 +7,10 @@
     "local"
   ],
   "name": {
-    "en": "Bosch Compress"
+    "en": "EMS-ESP"
   },
   "description": {
-    "en": "Adds support for Bosch compress heat pumps."
+    "en": "Adds support for EMS-ESP devices."
   },
   "category": [
     "climate"
@@ -20,5 +20,10 @@
     "small": "/assets/images/small.png",
     "large": "/assets/images/large.png",
     "xlarge": "/assets/images/xlarge.png"
-  }
+  },
+  "author": {
+    "name": "Andreas Assermark",
+    "email": "assermark@hotmail.com"
+  },
+  "brandColor": "#375f92"
 }
