@@ -6,5 +6,15 @@
     "access_token": "Access Token for admin",
     "access_token_hint": "Found in EMS-ESP web interface, under Security and Manage Users. Required for write access",
     "check_connection": "Check connection"
+  },
+  "flow": {
+    "cooldown_value_changes": {
+      "title": "Cooldown value changes",
+      "titleFormatted": "Cooldown value changes for [[cooldownTime]] seconds per [[entityKey]]",
+      "hint": "Allows immediate triggers but blocks follow-up triggers until there's a gap of no events for the specified time. Each unique entity value will have its own cooldown timer.",
+      "cooldown_time": "Cooldown time (seconds)",
+      "entity_identifier": "Entity identifier",
+      "entity_identifier_hint": "The key to use for identifying different entities. This should be a token from a previous card that uniquely identifies each entity (e.g., room name, device ID, etc.)."
+    }
   }
 }

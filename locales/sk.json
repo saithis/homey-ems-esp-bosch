@@ -6,5 +6,15 @@
     "access_token": "Prístupový Token pre admin",
     "access_token_hint": "Nájditeľné v EMS-ESP web rozhraní, pod Security a Manage Users. Potrebný prístup pre záspis",
     "check_connection": "Skontrolovať pripojenie"
+  },
+  "flow": {
+    "cooldown_value_changes": {
+      "title": "Dlžka oneskorenia zmien hodnôt",
+      "titleFormatted": "Dlžka oneskorenia zmien hodnôt pre [[cooldownTime]] sekúnd na [[entityKey]]",
+      "hint": "Umožňuje okamžité spustenia, ale blokuje následné spustenia, kým nie je medzera bez udalostí po zadaný čas. Každá unikátna hodnota entity bude mať svoj vlastný časovač oneskorenia.",
+      "cooldown_time": "Dlžka oneskorenia (sekundy)",
+      "entity_identifier": "Identifikátor entity",
+      "entity_identifier_hint": "Kľúč používaný na identifikáciu rôznych entít. Mal by to byť token z predchádzajúcej karty, ktorý jedinečne identifikuje každú entitu (napr. názov miestnosti, ID zariadenia atď.)."
+    }
   }
 }

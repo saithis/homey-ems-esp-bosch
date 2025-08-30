@@ -6,5 +6,15 @@
     "access_token": "Access Token för admin",
     "access_token_hint": "Finns i EMS-ESP webb gränssnitt, under Säkerhet och Användare. Krävs för skrivåtkomst",
     "check_connection": "Kontrollera anslutning"
+  },
+  "flow": {
+    "cooldown_value_changes": {
+      "title": "Nedkylning av värdeändringar",
+      "titleFormatted": "Nedkylning av värdeändringar i [[cooldownTime]] sekunder per [[entityKey]]",
+      "hint": "Tillåter omedelbara utlösare men blockerar uppföljande utlösare tills det finns ett gap av inga händelser under den angivna tiden. Varje unikt enhetsvärde kommer att ha sin egen nedkylningstimer.",
+      "cooldown_time": "Nedkylningstid (sekunder)",
+      "entity_identifier": "Enhetsidentifierare",
+      "entity_identifier_hint": "Nyckeln som används för att identifiera olika enheter. Detta bör vara en token från en föregående kort som unikt identifierar varje enhet (t.ex. rumsnamn, enhets-ID, etc.)."
+    }
   }
 }

@@ -72,6 +72,64 @@
         "id": "outdoor-temp-less-than"
       }
     ],
+    "actions": [
+      {
+        "id": "cooldown-value-changes",
+        "title": {
+          "en": "Cooldown value changes",
+          "sv": "Nedkylning av värdeändringar",
+          "sk": "Dlžka oneskorenia zmien hodnôt"
+        },
+        "titleFormatted": {
+          "en": "Cooldown value changes for [[cooldownTime]] seconds per [[entityKey]]",
+          "sv": "Nedkylning av värdeändringar i [[cooldownTime]] sekunder per [[entityKey]]",
+          "sk": "Dlžka oneskorenia zmien hodnôt pre [[cooldownTime]] sekúnd na [[entityKey]]"
+        },
+        "hint": {
+          "en": "Allows immediate triggers but blocks follow-up triggers until there's a gap of no events for the specified time. Each unique entity value will have its own cooldown timer.",
+          "sv": "Tillåter omedelbara utlösare men blockerar uppföljande utlösare tills det finns ett gap av inga händelser under den angivna tiden. Varje unikt enhetsvärde kommer att ha sin egen nedkylningstimer.",
+          "sk": "Umožňuje okamžité spustenia, ale blokuje následné spustenia, kým nie je medzera bez udalostí po zadaný čas. Každá unikátna hodnota entity bude mať svoj vlastný časovač oneskorenia."
+        },
+        "args": [
+          {
+            "type": "number",
+            "name": "cooldownTime",
+            "title": {
+              "en": "Cooldown time (seconds)",
+              "sv": "Nedkylningstid (sekunder)",
+              "sk": "Dlžka oneskorenia (sekundy)"
+            },
+            "placeholder": {
+              "en": "300",
+              "sv": "300",
+              "sk": "300"
+            },
+            "min": 1,
+            "max": 3600,
+            "step": 1
+          },
+          {
+            "type": "text",
+            "name": "entityKey",
+            "title": {
+              "en": "Entity identifier",
+              "sv": "Enhetsidentifierare",
+              "sk": "Identifikátor entity"
+            },
+            "placeholder": {
+              "en": "room_name",
+              "sv": "rumsnamn",
+              "sk": "názov_miestnosti"
+            },
+            "hint": {
+              "en": "The key to use for identifying different entities. This should be a token from a previous card that uniquely identifies each entity (e.g., room name, device ID, etc.).",
+              "sv": "Nyckeln som används för att identifiera olika enheter. Detta bör vara en token från en föregående kort som unikt identifierar varje enhet (t.ex. rumsnamn, enhets-ID, etc.).",
+              "sk": "Kľúč používaný na identifikáciu rôznych entít. Mal by to byť token z predchádzajúcej karty, ktorý jedinečne identifikuje každú entitu (napr. názov miestnosti, ID zariadenia atď.)."
+            }
+          }
+        ]
+      }
+    ],
     "triggers": [
       {
         "id": "boiler_lastcode_changed",
