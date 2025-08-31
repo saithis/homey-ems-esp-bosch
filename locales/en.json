@@ -15,6 +15,16 @@
       "cooldown_time": "Cooldown time (seconds)",
       "entity_identifier": "Entity identifier",
       "entity_identifier_hint": "The key to use for identifying different entities. This should be a token from a previous card that uniquely identifies each entity (e.g., room name, device ID, etc.)."
+    },
+    "distinct_value_changes": {
+      "title": "Distinct value changes",
+      "titleFormatted": "Distinct value changes for [[distinctTime]] seconds per [[entityKey]]",
+      "hint": "Allows triggers when values change or when enough time has passed since the last trigger with the same value. Each unique entity will have its own distinct value tracking.",
+      "distinct_time": "Distinct time (seconds)",
+      "entity_identifier": "Entity identifier",
+      "entity_identifier_hint": "The key to use for identifying different entities. This should be a token from a previous card that uniquely identifies each entity (e.g., room name, device ID, etc.).",
+      "value_identifier": "Value identifier",
+      "value_identifier_hint": "The key to use for the value to check for distinctness. This should be a token from a previous card that contains the value to track (e.g., temperature, humidity, status, etc.)."
     }
   }
 }

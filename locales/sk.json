@@ -15,6 +15,16 @@
       "cooldown_time": "Dlžka oneskorenia (sekundy)",
       "entity_identifier": "Identifikátor entity",
       "entity_identifier_hint": "Kľúč používaný na identifikáciu rôznych entít. Mal by to byť token z predchádzajúcej karty, ktorý jedinečne identifikuje každú entitu (napr. názov miestnosti, ID zariadenia atď.)."
+    },
+    "distinct_value_changes": {
+      "title": "Distinktné zmeny hodnôt",
+      "titleFormatted": "Distinktné zmeny hodnôt pre [[distinctTime]] sekúnd na [[entityKey]]",
+      "hint": "Umožňuje spustenia, keď sa hodnoty zmenia alebo keď uplynie dostatok času od posledného spustenia s rovnakou hodnotou. Každá unikátna entita bude mať svoje vlastné sledovanie distinktných hodnôt.",
+      "distinct_time": "Distinktný čas (sekundy)",
+      "entity_identifier": "Identifikátor entity",
+      "entity_identifier_hint": "Kľúč používaný na identifikáciu rôznych entít. Mal by to byť token z predchádzajúcej karty, ktorý jedinečne identifikuje každú entitu (napr. názov miestnosti, ID zariadenia atď.).",
+      "value_identifier": "Identifikátor hodnoty",
+      "value_identifier_hint": "Kľúč používaný pre hodnotu na kontrolu distinktnosti. Mal by to byť token z predchádzajúcej karty, ktorý obsahuje hodnotu na sledovanie (napr. teplota, vlhkosť, stav atď.)."
     }
   }
 }

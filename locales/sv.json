@@ -15,6 +15,16 @@
       "cooldown_time": "Nedkylningstid (sekunder)",
       "entity_identifier": "Enhetsidentifierare",
       "entity_identifier_hint": "Nyckeln som används för att identifiera olika enheter. Detta bör vara en token från en föregående kort som unikt identifierar varje enhet (t.ex. rumsnamn, enhets-ID, etc.)."
+    },
+    "distinct_value_changes": {
+      "title": "Distinkta värdeändringar",
+      "titleFormatted": "Distinkta värdeändringar i [[distinctTime]] sekunder per [[entityKey]]",
+      "hint": "Tillåter utlösare när värden ändras eller när tillräckligt med tid har gått sedan senaste utlösaren med samma värde. Varje unik enhet kommer att ha sin egen distinkta värdespårning.",
+      "distinct_time": "Distinkt tid (sekunder)",
+      "entity_identifier": "Enhetsidentifierare",
+      "entity_identifier_hint": "Nyckeln som används för att identifiera olika enheter. Detta bör vara en token från en föregående kort som unikt identifierar varje enhet (t.ex. rumsnamn, enhets-ID, etc.).",
+      "value_identifier": "Värdeidentifierare",
+      "value_identifier_hint": "Nyckeln som används för värdet att kontrollera för distinkthet. Detta bör vara en token från en föregående kort som innehåller värdet att spåra (t.ex. temperatur, luftfuktighet, status, etc.)."
     }
   }
 }
