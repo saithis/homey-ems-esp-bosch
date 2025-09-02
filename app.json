@@ -30,6 +30,46 @@
   "flow": {
     "conditions": [
       {
+        "id": "cooldown-condition-flow",
+        "title": {
+          "en": "Cooldown"
+        },
+        "titleFormatted": {
+          "en": "Cooldown for [[cooldownTime]] seconds per [[partitionKey]]"
+        },
+        "hint": {
+          "en": "Allows immediate triggers but blocks follow-up triggers until there's a gap of no events for the specified time. Each unique entity partition key will have its own cooldown timer. Partitions are shared between all cards, so make them unique."
+        },
+        "args": [
+          {
+            "type": "number",
+            "name": "cooldownTime",
+            "title": {
+              "en": "Cooldown time (seconds)"
+            },
+            "placeholder": {
+              "en": "300"
+            },
+            "min": 1,
+            "max": 3600,
+            "step": 1
+          },
+          {
+            "type": "text",
+            "name": "partitionKey",
+            "title": {
+              "en": "Partition identifier"
+            },
+            "placeholder": {
+              "en": "room_name"
+            },
+            "hint": {
+              "en": "The key to use for identifying different cooldown partitions. This could be the zone name, device ID, etc. Best is to also prefix that with a unique name for the flow card."
+            }
+          }
+        ]
+      },
+      {
         "title": {
           "en": "Outdoor temperature greater than..."
         },
@@ -70,139 +110,6 @@
           }
         ],
         "id": "outdoor-temp-less-than"
-      }
-    ],
-    "actions": [
-      {
-        "id": "cooldown-value-changes",
-        "title": {
-          "en": "Cooldown value changes",
-          "sv": "Nedkylning av värdeändringar",
-          "sk": "Dlžka oneskorenia zmien hodnôt"
-        },
-        "titleFormatted": {
-          "en": "Cooldown value changes for [[cooldownTime]] seconds per [[entityKey]]",
-          "sv": "Nedkylning av värdeändringar i [[cooldownTime]] sekunder per [[entityKey]]",
-          "sk": "Dlžka oneskorenia zmien hodnôt pre [[cooldownTime]] sekúnd na [[entityKey]]"
-        },
-        "hint": {
-          "en": "Allows immediate triggers but blocks follow-up triggers until there's a gap of no events for the specified time. Each unique entity value will have its own cooldown timer.",
-          "sv": "Tillåter omedelbara utlösare men blockerar uppföljande utlösare tills det finns ett gap av inga händelser under den angivna tiden. Varje unikt enhetsvärde kommer att ha sin egen nedkylningstimer.",
-          "sk": "Umožňuje okamžité spustenia, ale blokuje následné spustenia, kým nie je medzera bez udalostí po zadaný čas. Každá unikátna hodnota entity bude mať svoj vlastný časovač oneskorenia."
-        },
-        "args": [
-          {
-            "type": "number",
-            "name": "cooldownTime",
-            "title": {
-              "en": "Cooldown time (seconds)",
-              "sv": "Nedkylningstid (sekunder)",
-              "sk": "Dlžka oneskorenia (sekundy)"
-            },
-            "placeholder": {
-              "en": "300",
-              "sv": "300",
-              "sk": "300"
-            },
-            "min": 1,
-            "max": 3600,
-            "step": 1
-          },
-          {
-            "type": "text",
-            "name": "entityKey",
-            "title": {
-              "en": "Entity identifier",
-              "sv": "Enhetsidentifierare",
-              "sk": "Identifikátor entity"
-            },
-            "placeholder": {
-              "en": "room_name",
-              "sv": "rumsnamn",
-              "sk": "názov_miestnosti"
-            },
-            "hint": {
-              "en": "The key to use for identifying different entities. This should be a token from a previous card that uniquely identifies each entity (e.g., room name, device ID, etc.).",
-              "sv": "Nyckeln som används för att identifiera olika enheter. Detta bör vara en token från en föregående kort som unikt identifierar varje enhet (t.ex. rumsnamn, enhets-ID, etc.).",
-              "sk": "Kľúč používaný na identifikáciu rôznych entít. Mal by to byť token z predchádzajúcej karty, ktorý jedinečne identifikuje každú entitu (napr. názov miestnosti, ID zariadenia atď.)."
-            }
-          }
-        ]
-      },
-      {
-        "id": "distinct-value-changes",
-        "title": {
-          "en": "Distinct value changes",
-          "sv": "Distinkta värdeändringar",
-          "sk": "Distinktné zmeny hodnôt"
-        },
-        "titleFormatted": {
-          "en": "Distinct value changes for [[distinctTime]] seconds per [[entityKey]] with value [[valueKey]]",
-          "sv": "Distinkta värdeändringar i [[distinctTime]] sekunder per [[entityKey]] med värde [[valueKey]]",
-          "sk": "Distinktné zmeny hodnôt pre [[distinctTime]] sekúnd na [[entityKey]] s hodnotou [[valueKey]]"
-        },
-        "hint": {
-          "en": "Allows triggers when values change or when enough time has passed since the last trigger with the same value. Each unique entity will have its own distinct value tracking.",
-          "sv": "Tillåter utlösare när värden ändras eller när tillräckligt med tid har gått sedan senaste utlösaren med samma värde. Varje unik enhet kommer att ha sin egen distinkta värdespårning.",
-          "sk": "Umožňuje spustenia, keď sa hodnoty zmenia alebo keď uplynie dostatok času od posledného spustenia s rovnakou hodnotou. Každá unikátna entita bude mať svoje vlastné sledovanie distinktných hodnôt."
-        },
-        "args": [
-          {
-            "type": "number",
-            "name": "distinctTime",
-            "title": {
-              "en": "Distinct time (seconds)",
-              "sv": "Distinkt tid (sekunder)",
-              "sk": "Distinktný čas (sekundy)"
-            },
-            "placeholder": {
-              "en": "300",
-              "sv": "300",
-              "sk": "300"
-            },
-            "min": 1,
-            "max": 3600,
-            "step": 1
-          },
-          {
-            "type": "text",
-            "name": "entityKey",
-            "title": {
-              "en": "Entity identifier",
-              "sv": "Enhetsidentifierare",
-              "sk": "Identifikátor entity"
-            },
-            "placeholder": {
-              "en": "room_name",
-              "sv": "rumsnamn",
-              "sk": "názov_miestnosti"
-            },
-            "hint": {
-              "en": "The key to use for identifying different entities. This should be a token from a previous card that uniquely identifies each entity (e.g., room name, device ID, etc.).",
-              "sv": "Nyckeln som används för att identifiera olika enheter. Detta bör vara en token från en föregående kort som unikt identifierar varje enhet (t.ex. rumsnamn, enhets-ID, etc.).",
-              "sk": "Kľúč používaný na identifikáciu rôznych entít. Mal by to byť token z predchádzajúcej karty, ktorý jedinečne identifikuje každú entitu (napr. názov miestnosti, ID zariadenia atď.)."
-            }
-          },
-          {
-            "type": "text",
-            "name": "valueKey",
-            "title": {
-              "en": "Value identifier",
-              "sv": "Värdeidentifierare",
-              "sk": "Identifikátor hodnoty"
-            },
-            "placeholder": {
-              "en": "temperature",
-              "sv": "temperatur",
-              "sk": "teplota"
-            },
-            "hint": {
-              "en": "The key to use for the value to check for distinctness. This should be a token from a previous card that contains the value to track (e.g., temperature, humidity, status, etc.).",
-              "sv": "Nyckeln som används för värdet att kontrollera för distinkthet. Detta bör vara en token från en föregående kort som innehåller värdet att spåra (t.ex. temperatur, luftfuktighet, status, etc.).",
-              "sk": "Kľúč používaný pre hodnotu na kontrolu distinktnosti. Mal by to byť token z predchádzajúcej karty, ktorý obsahuje hodnotu na sledovanie (t.ex. teplota, vlhkosť, stav atď.)."
-            }
-          }
-        ]
       }
     ],
     "triggers": [
