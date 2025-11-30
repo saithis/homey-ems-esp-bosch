@@ -28,7 +28,7 @@ export class BoilerDevice extends Homey.Device {
     // https://apps.developer.homey.app/the-basics/flow#custom-capability-changed
     return this.homey.flow
       .getDeviceTriggerCard("boiler_wwcurtemp_less_than")
-      ?.trigger(this, { wwcurtemp: newData.wwcurtemp }, newData);
+      ?.trigger(this, { wwcurtemp: newData.dhw?.curtemp ?? 0 }, newData);
   }
 
   private async updateCapabilityValues(data: BoilerData) {
@@ -41,7 +41,7 @@ export class BoilerDevice extends Homey.Device {
       ["boiler_hpcompspd", data.hpcompspd],
       ["boiler_lastcode", formatLastCode(parseLastCode(data.lastcode))],
       ["boiler_rettemp", data.rettemp],
-      ["boiler_wwcurtemp", data.wwcurtemp],
+      ["boiler_wwcurtemp", data.dhw?.curtemp ?? 0],
     ]);
   }
 

@@ -21,7 +21,8 @@ class BoilerDriver extends Homey.Driver {
           args: { wwcurtemp: number; device: BoilerDevice; },
           state: BoilerData
         ) => {
-          if (state.wwcurtemp <= args.wwcurtemp) {
+          const currentTemp = state.dhw?.curtemp ?? 0;
+          if (currentTemp <= args.wwcurtemp) {
             if (this.throttling.check("wwcurtemp_less_than", hoursToMs(8))) {
               this.log("Trigger boiler_wwcurtemp_less_than has been triggered");
               return true;
