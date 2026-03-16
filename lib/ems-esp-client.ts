@@ -40,7 +40,7 @@ export class EmsEspClient {
   private async post<T>(path: string, body: T) {
     if (!this.accessToken) throw Error("No access token");
     try {
-      this.mutex.acquire();
+      await this.mutex.acquire();
       return EmsEspClient.checkResponse(
         fetch(`http://${this.networkAddress}/${path}`, {
           method: "POST",
@@ -74,15 +74,23 @@ export class EmsEspClient {
   }
 
   public async setHcSelectedTemp(hcId: number, temp: number) {
-    await this.post("api/thermostat", { cmd: "seltemp", id: hcId, data: temp });
+    await this.post("api/thermostat", { cmd: "seltemp", hc: hcId, data: temp });
   }
 
   public async setHcSummerMode(hcId: number, enabled: boolean) {
+    // Note: "summermode" is not in the official Modbus entity docs but may
+    // be available as a command on some models. Query your device at
+    // GET /api/thermostat/commands to verify. If unsupported, use
+    // setHcSummerTemp() to manipulate the threshold instead.
     await this.post("api/thermostat", {
       cmd: "summermode",
-      id: hcId,
+      hc: hcId,
       data: enabled ? "on" : "off",
     });
+  }
+
+  public async setHcSummerTemp(hcId: number, temp: number) {
+    await this.post("api/thermostat", { cmd: "summertemp", hc: hcId, data: temp });
   }
 
   public async getBoilerData(): Promise<BoilerData> {
