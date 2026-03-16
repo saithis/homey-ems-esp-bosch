@@ -73,6 +73,18 @@ export class EmsEspClient {
     await this.post("api/thermostat", { cmd: "seltemp", data: temp });
   }
 
+  public async setHcSelectedTemp(hcId: number, temp: number) {
+    await this.post("api/thermostat", { cmd: "seltemp", id: hcId, data: temp });
+  }
+
+  public async setHcSummerMode(hcId: number, enabled: boolean) {
+    await this.post("api/thermostat", {
+      cmd: "summermode",
+      id: hcId,
+      data: enabled ? "on" : "off",
+    });
+  }
+
   public async getBoilerData(): Promise<BoilerData> {
     return this.get<BoilerData>("api/boiler");
   }

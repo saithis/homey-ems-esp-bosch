@@ -1,0 +1,17 @@
+{
+  "title": {
+    "en": "Compressor speed less than..."
+  },
+  "titleFormatted": {
+    "en": "Compressor speed less than [[speed]]%"
+  },
+  "args": [
+    {
+      "type": "range",
+      "name": "speed",
+      "min": 0,
+      "max": 100,
+      "step": 1
+    }
+  ]
+}

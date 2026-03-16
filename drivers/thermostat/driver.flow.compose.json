@@ -18,5 +18,91 @@
         }
       ]
     }
+  ],
+  "actions": [
+    {
+      "id": "thermostat_set_hc_target_temp",
+      "title": {
+        "en": "Set heating circuit target temperature"
+      },
+      "titleFormatted": {
+        "en": "Set HC[[circuit]] target temperature to [[temperature]]°C"
+      },
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "circuit",
+          "placeholder": {
+            "en": "Select circuit"
+          }
+        },
+        {
+          "type": "range",
+          "name": "temperature",
+          "min": 5,
+          "max": 30,
+          "step": 0.5,
+          "label": {
+            "en": "°C"
+          },
+          "labelDecimals": 1
+        }
+      ]
+    },
+    {
+      "id": "thermostat_adjust_hc_target_temp_offset",
+      "title": {
+        "en": "Adjust heating circuit target temperature"
+      },
+      "titleFormatted": {
+        "en": "Adjust HC[[circuit]] target temperature by [[offset]]°C"
+      },
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "circuit",
+          "placeholder": {
+            "en": "Select circuit"
+          }
+        },
+        {
+          "type": "range",
+          "name": "offset",
+          "min": -5,
+          "max": 5,
+          "step": 0.5,
+          "label": {
+            "en": "°C"
+          },
+          "labelDecimals": 1
+        }
+      ]
+    },
+    {
+      "id": "thermostat_set_hc_summer_mode",
+      "title": {
+        "en": "Set heating circuit summer mode"
+      },
+      "titleFormatted": {
+        "en": "Set HC[[circuit]] summer mode to [[enabled]]"
+      },
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "circuit",
+          "placeholder": {
+            "en": "Select circuit"
+          }
+        },
+        {
+          "type": "dropdown",
+          "name": "enabled",
+          "values": [
+            { "id": "on", "label": { "en": "On" } },
+            { "id": "off", "label": { "en": "Off" } }
+          ]
+        }
+      ]
+    }
   ]
 }

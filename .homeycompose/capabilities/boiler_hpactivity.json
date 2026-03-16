@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Heat pump activity"
+  },
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "icon": "/assets/state.svg"
+}

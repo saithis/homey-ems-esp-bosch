@@ -12,6 +12,9 @@
     "boiler_hpcircspd",
     "boiler_hpcompspd",
     "boiler_wwcurtemp",
+    "boiler_ww_target_temp",
+    "boiler_hpactivity",
+    "boiler_last_compressor_run_duration",
     "boiler_lastcode"
   ],
   "platforms": ["local"],
