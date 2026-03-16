@@ -17,6 +17,7 @@
       "type": "dropdown",
       "name": "mode",
       "values": [
+        { "id": "off", "label": { "en": "Off" } },
         { "id": "manual", "label": { "en": "Manual" } },
         { "id": "auto", "label": { "en": "Auto" } }
       ]
