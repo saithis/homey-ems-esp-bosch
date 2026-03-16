@@ -84,7 +84,7 @@
         "en": "Set heating circuit summer mode"
       },
       "titleFormatted": {
-        "en": "Set HC[[circuit]] summer mode to [[enabled]]"
+        "en": "Set HC[[circuit]] summer mode to [[mode]]"
       },
       "args": [
         {
@@ -96,10 +96,11 @@
         },
         {
           "type": "dropdown",
-          "name": "enabled",
+          "name": "mode",
           "values": [
-            { "id": "on", "label": { "en": "On" } },
-            { "id": "off", "label": { "en": "Off" } }
+            { "id": "summer", "label": { "en": "Summer" } },
+            { "id": "auto", "label": { "en": "Auto" } },
+            { "id": "winter", "label": { "en": "Winter" } }
           ]
         }
       ]

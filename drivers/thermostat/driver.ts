@@ -105,16 +105,13 @@ class ThermostatDriver extends Homey.Driver {
     summerModeCard.registerRunListener(
       async (args: {
         circuit: { id: string; name: string };
-        enabled: string;
+        mode: "summer" | "auto" | "winter";
         device: ThermostatDevice;
       }) => {
         const device = args.device;
         const hcId = Number(args.circuit.id);
-        const enabled = args.enabled === "on";
-        this.log(
-          `Setting HC${hcId} summer mode to ${enabled ? "on" : "off"}`
-        );
-        await device.client.setHcSummerMode(hcId, enabled);
+        this.log(`Setting HC${hcId} summer mode to ${args.mode}`);
+        await device.client.setHcSummerMode(hcId, args.mode);
       }
     );
   }
