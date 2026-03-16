@@ -182,6 +182,24 @@ class ThermostatDevice extends Homey.Device {
         return temp != null && temp > args.temp;
       });
 
+    const hcModeCondition = this.homey.flow.getConditionCard("hc-mode-is");
+    hcModeCondition.registerArgumentAutocompleteListener(
+      "circuit",
+      async (query: string) => {
+        return this.detectedCircuits
+          .map((id: number) => ({ name: `HC${id}`, id: String(id) }))
+          .filter((c: { name: string }) =>
+            c.name.toLowerCase().includes(query.toLowerCase())
+          );
+      }
+    );
+    hcModeCondition.registerRunListener(
+      async (args: { circuit: { id: string }; mode: string }) => {
+        const hcData = this.getHcData(Number(args.circuit.id));
+        return hcData?.mode === args.mode;
+      }
+    );
+
     this.startPolling();
   }
 

@@ -1,0 +1,25 @@
+{
+  "title": {
+    "en": "Heating circuit operating mode is..."
+  },
+  "titleFormatted": {
+    "en": "HC[[circuit]] operating mode is [[mode]]"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "circuit",
+      "placeholder": {
+        "en": "Select circuit"
+      }
+    },
+    {
+      "type": "dropdown",
+      "name": "mode",
+      "values": [
+        { "id": "manual", "label": { "en": "Manual" } },
+        { "id": "auto", "label": { "en": "Auto" } }
+      ]
+    }
+  ]
+}
