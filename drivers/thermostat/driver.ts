@@ -73,11 +73,14 @@ class ThermostatDriver extends Homey.Driver {
       }) => {
         const device = args.device;
         const hcId = Number(args.circuit.id);
+        const hcData = device.getHcData(hcId);
+        const oldTemp = hcData?.seltemp ?? 0;
         this.log(
-          `Setting HC${hcId} target temp to ${args.temperature}°C`
+          `Setting HC${hcId} target temp to ${args.temperature}°C (was ${oldTemp}°C)`
         );
         device.restartPollingAfterWrite();
         await device.client.setHcSelectedTemp(hcId, args.temperature);
+        return { old_temperature: oldTemp };
       }
     );
 
@@ -113,6 +116,7 @@ class ThermostatDriver extends Homey.Driver {
         );
         device.restartPollingAfterWrite();
         await device.client.setHcSelectedTemp(hcId, newTemp);
+        return { old_temperature: currentTemp };
       }
     );
 
