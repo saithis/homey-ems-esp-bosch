@@ -78,12 +78,8 @@ export class EmsEspClient {
   }
 
   public async setHcSummerMode(hcId: number, enabled: boolean) {
-    // Note: "summermode" is not in the official Modbus entity docs but may
-    // be available as a command on some models. Query your device at
-    // GET /api/thermostat/commands to verify. If unsupported, use
-    // setHcSummerTemp() to manipulate the threshold instead.
     await this.post("api/thermostat", {
-      cmd: "summermode",
+      cmd: "summersetmode",
       hc: hcId,
       data: enabled ? "on" : "off",
     });
