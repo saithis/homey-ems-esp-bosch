@@ -17,6 +17,60 @@
           }
         }
       ]
+    },
+    {
+      "id": "thermostat_outdoor_temp_crossed_above",
+      "title": {
+        "en": "Outdoor temperature went above..."
+      },
+      "titleFormatted": {
+        "en": "Outdoor temperature went above [[temp]]°C"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "temp",
+          "placeholder": { "en": "0" },
+          "min": -50,
+          "max": 50,
+          "step": 0.5
+        }
+      ],
+      "tokens": [
+        {
+          "type": "number",
+          "name": "outdoor_temp",
+          "title": { "en": "Outdoor temperature" },
+          "example": { "en": "12" }
+        }
+      ]
+    },
+    {
+      "id": "thermostat_outdoor_temp_crossed_below",
+      "title": {
+        "en": "Outdoor temperature went below..."
+      },
+      "titleFormatted": {
+        "en": "Outdoor temperature went below [[temp]]°C"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "temp",
+          "placeholder": { "en": "0" },
+          "min": -50,
+          "max": 50,
+          "step": 0.5
+        }
+      ],
+      "tokens": [
+        {
+          "type": "number",
+          "name": "outdoor_temp",
+          "title": { "en": "Outdoor temperature" },
+          "example": { "en": "5" }
+        }
+      ]
     }
   ],
   "actions": [

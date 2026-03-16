@@ -35,6 +35,28 @@ class ThermostatDriver extends Homey.Driver {
         return true;
       });
 
+    this.homey.flow
+      .getDeviceTriggerCard("thermostat_outdoor_temp_crossed_above")
+      .registerRunListener(
+        async (
+          args: { temp: number },
+          state: { oldTemp: number; newTemp: number }
+        ) => {
+          return state.oldTemp <= args.temp && state.newTemp > args.temp;
+        }
+      );
+
+    this.homey.flow
+      .getDeviceTriggerCard("thermostat_outdoor_temp_crossed_below")
+      .registerRunListener(
+        async (
+          args: { temp: number },
+          state: { oldTemp: number; newTemp: number }
+        ) => {
+          return state.oldTemp >= args.temp && state.newTemp < args.temp;
+        }
+      );
+
     // --- Action card: Set HC target temperature ---
     const setTempCard = this.homey.flow.getActionCard(
       "thermostat_set_hc_target_temp"

@@ -9,6 +9,12 @@ class ThermostatDevice extends Homey.Device {
   private hpoperatingstateChangedTrigger:
     | Homey.FlowCardTriggerDevice
     | undefined;
+  private outdoorTempCrossedAboveTrigger:
+    | Homey.FlowCardTriggerDevice
+    | undefined;
+  private outdoorTempCrossedBelowTrigger:
+    | Homey.FlowCardTriggerDevice
+    | undefined;
 
   // Multi-circuit support
   public detectedCircuits: number[] = [];
@@ -74,7 +80,10 @@ class ThermostatDevice extends Homey.Device {
   private async triggerFlows(newData: ThermostatData) {
     const newHc1 = newData.hc1;
     const oldHc1 = this.oldData?.hc1;
+    const oldOutdoorTemp = this.oldData?.dampedoutdoortemp;
+    const newOutdoorTemp = newData.dampedoutdoortemp;
     this.oldData = newData;
+
     if (
       oldHc1 &&
       newHc1 &&
@@ -88,6 +97,21 @@ class ThermostatDevice extends Homey.Device {
         },
         undefined
       );
+    }
+
+    if (
+      oldOutdoorTemp != null &&
+      newOutdoorTemp != null &&
+      oldOutdoorTemp !== newOutdoorTemp
+    ) {
+      const state = { oldTemp: oldOutdoorTemp, newTemp: newOutdoorTemp };
+      const tokens = { outdoor_temp: newOutdoorTemp };
+      await this.outdoorTempCrossedAboveTrigger
+        ?.trigger(this, tokens, state)
+        .catch(this.error);
+      await this.outdoorTempCrossedBelowTrigger
+        ?.trigger(this, tokens, state)
+        .catch(this.error);
     }
   }
 
@@ -116,6 +140,12 @@ class ThermostatDevice extends Homey.Device {
   async onInit() {
     this.hpoperatingstateChangedTrigger = this.homey.flow.getDeviceTriggerCard(
       "thermostat_hc1_hpoperatingstate_changed"
+    );
+    this.outdoorTempCrossedAboveTrigger = this.homey.flow.getDeviceTriggerCard(
+      "thermostat_outdoor_temp_crossed_above"
+    );
+    this.outdoorTempCrossedBelowTrigger = this.homey.flow.getDeviceTriggerCard(
+      "thermostat_outdoor_temp_crossed_below"
     );
 
     this.registerCapabilityListener("target_temperature", async (value) => {
