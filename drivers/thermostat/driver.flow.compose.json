@@ -104,6 +104,33 @@
           ]
         }
       ]
+    },
+    {
+      "id": "thermostat_set_hc_mode",
+      "title": {
+        "en": "Set heating circuit operating mode"
+      },
+      "titleFormatted": {
+        "en": "Set HC[[circuit]] operating mode to [[mode]]"
+      },
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "circuit",
+          "placeholder": {
+            "en": "Select circuit"
+          }
+        },
+        {
+          "type": "dropdown",
+          "name": "mode",
+          "values": [
+            { "id": "off", "label": { "en": "Off" } },
+            { "id": "manual", "label": { "en": "Manual" } },
+            { "id": "auto", "label": { "en": "Auto" } }
+          ]
+        }
+      ]
     }
   ]
 }

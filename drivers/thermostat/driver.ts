@@ -114,6 +114,27 @@ class ThermostatDriver extends Homey.Driver {
         await device.client.setHcSummerMode(hcId, args.mode);
       }
     );
+
+    // --- Action card: Set HC operating mode ---
+    const modeCard = this.homey.flow.getActionCard(
+      "thermostat_set_hc_mode"
+    );
+    modeCard.registerArgumentAutocompleteListener(
+      "circuit",
+      this.circuitAutocomplete
+    );
+    modeCard.registerRunListener(
+      async (args: {
+        circuit: { id: string; name: string };
+        mode: "off" | "manual" | "auto";
+        device: ThermostatDevice;
+      }) => {
+        const device = args.device;
+        const hcId = Number(args.circuit.id);
+        this.log(`Setting HC${hcId} operating mode to ${args.mode}`);
+        await device.client.setHcMode(hcId, args.mode);
+      }
+    );
   }
 
   async onPair(session: Homey.Driver.PairSession): Promise<void> {
