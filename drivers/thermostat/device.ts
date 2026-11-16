@@ -1,7 +1,7 @@
 import Homey from "homey";
 import { EmsEspClient } from "../../lib/ems-esp-client";
 import { capitalize, polling, setCapabilityValues } from "../../lib/utils";
-import { ThermostatData } from "../../lib/types";
+import { ThermostatData, HeatingCircuit } from "../../lib/types";
 
 class ThermostatDevice extends Homey.Device {
   private stopPolling: (() => void) | null = null;
@@ -9,16 +9,44 @@ class ThermostatDevice extends Homey.Device {
   private hpoperatingstateChangedTrigger:
     | Homey.FlowCardTriggerDevice
     | undefined;
+  private outdoorTempCrossedAboveTrigger:
+    | Homey.FlowCardTriggerDevice
+    | undefined;
+  private outdoorTempCrossedBelowTrigger:
+    | Homey.FlowCardTriggerDevice
+    | undefined;
+
+  // Multi-circuit support
+  public detectedCircuits: number[] = [];
 
   private get intervalMs() {
     return Number(this.getSetting("poll_interval") || 10000);
   }
 
-  private get client() {
+  public get client() {
     return new EmsEspClient(
       this.getSetting("network_address"),
       this.getSetting("access_token")
     );
+  }
+
+  private detectCircuits(data: ThermostatData) {
+    const circuits: number[] = [];
+    for (let i = 1; i <= 4; i++) {
+      const key = `hc${i}` as keyof ThermostatData;
+      if (data[key]) circuits.push(i);
+    }
+    if (circuits.length === 0) {
+      // Default to hc1 if no circuits detected
+      this.log("No heating circuits detected, defaulting to hc1");
+      circuits.push(1);
+    }
+    this.detectedCircuits = circuits;
+  }
+
+  public getHcData(hcId: number): HeatingCircuit | undefined {
+    const key = `hc${hcId}` as keyof ThermostatData;
+    return this.oldData?.[key] as HeatingCircuit | undefined;
   }
 
   private startPolling() {
@@ -31,10 +59,11 @@ class ThermostatDevice extends Homey.Device {
         if (err) {
           this.error(err);
           await this.setUnavailable(`${err}`).catch(this.error);
-          // Automatically restart polling after the interval to recover from errors.          
+          // Automatically restart polling after the interval to recover from errors.
           setTimeout(() => this.startPolling(), this.intervalMs * 2);
           return;
         } else if (res) {
+          this.detectCircuits(res);
           await this.updateCapabilityValues(res).catch(this.error);
           await this.setAvailable().catch(this.error);
           await this.triggerFlows(res).catch(this.error);
@@ -43,15 +72,24 @@ class ThermostatDevice extends Homey.Device {
     );
   }
 
+  public restartPollingAfterWrite() {
+    this.stopPolling?.();
+    setTimeout(() => this.startPolling(), this.intervalMs);
+  }
+
   private async triggerFlows(newData: ThermostatData) {
     const newHc1 = newData.hc1;
     const oldHc1 = this.oldData?.hc1;
+    const oldOutdoorTemp = this.oldData?.dampedoutdoortemp;
+    const newOutdoorTemp = newData.dampedoutdoortemp;
+    this.oldData = newData;
+
     if (
       oldHc1 &&
       newHc1 &&
       oldHc1.hpoperatingstate !== newHc1.hpoperatingstate
     ) {
-      return this.hpoperatingstateChangedTrigger?.trigger(
+      await this.hpoperatingstateChangedTrigger?.trigger(
         this,
         {
           old_value: capitalize(oldHc1.hpoperatingstate),
@@ -60,7 +98,21 @@ class ThermostatDevice extends Homey.Device {
         undefined
       );
     }
-    this.oldData = newData;
+
+    if (
+      oldOutdoorTemp != null &&
+      newOutdoorTemp != null &&
+      oldOutdoorTemp !== newOutdoorTemp
+    ) {
+      const state = { oldTemp: oldOutdoorTemp, newTemp: newOutdoorTemp };
+      const tokens = { outdoor_temp: newOutdoorTemp };
+      await this.outdoorTempCrossedAboveTrigger
+        ?.trigger(this, tokens, state)
+        .catch(this.error);
+      await this.outdoorTempCrossedBelowTrigger
+        ?.trigger(this, tokens, state)
+        .catch(this.error);
+    }
   }
 
   private async updateCapabilityValues(data: ThermostatData) {
@@ -89,6 +141,12 @@ class ThermostatDevice extends Homey.Device {
     this.hpoperatingstateChangedTrigger = this.homey.flow.getDeviceTriggerCard(
       "thermostat_hc1_hpoperatingstate_changed"
     );
+    this.outdoorTempCrossedAboveTrigger = this.homey.flow.getDeviceTriggerCard(
+      "thermostat_outdoor_temp_crossed_above"
+    );
+    this.outdoorTempCrossedBelowTrigger = this.homey.flow.getDeviceTriggerCard(
+      "thermostat_outdoor_temp_crossed_below"
+    );
 
     this.registerCapabilityListener("target_temperature", async (value) => {
       this.log(`Updating selected temperature to ${value}°C`);
@@ -99,7 +157,7 @@ class ThermostatDevice extends Homey.Device {
           return;
         }
         this.stopPolling?.();
-        await this.client.setSelectedTemp(value).catch(this.error);
+        await this.client.setHcSelectedTemp(1, value).catch(this.error);
         this.log(`Selected temperature updated to ${value}°C`);
       } catch (err) {
         this.error("Failed to update selected temperature", err);
@@ -112,17 +170,35 @@ class ThermostatDevice extends Homey.Device {
 
     this.homey.flow
       .getConditionCard("outdoor-temp-less-than")
-      .registerRunListener(async (args: { temp: number; }, state) => {
+      .registerRunListener(async (args: { temp: number }) => {
         const temp = this.oldData?.dampedoutdoortemp;
-        return temp && temp < args.temp;
+        return temp != null && temp < args.temp;
       });
 
     this.homey.flow
       .getConditionCard("outdoor-temp-greater-than")
-      .registerRunListener(async (args: { temp: number; }, state) => {
+      .registerRunListener(async (args: { temp: number }) => {
         const temp = this.oldData?.dampedoutdoortemp;
-        return temp && temp > args.temp;
+        return temp != null && temp > args.temp;
       });
+
+    const hcModeCondition = this.homey.flow.getConditionCard("hc-mode-is");
+    hcModeCondition.registerArgumentAutocompleteListener(
+      "circuit",
+      async (query: string) => {
+        return this.detectedCircuits
+          .map((id: number) => ({ name: `HC${id}`, id: String(id) }))
+          .filter((c: { name: string }) =>
+            c.name.toLowerCase().includes(query.toLowerCase())
+          );
+      }
+    );
+    hcModeCondition.registerRunListener(
+      async (args: { circuit: { id: string }; mode: string }) => {
+        const hcData = this.getHcData(Number(args.circuit.id));
+        return hcData?.mode === args.mode;
+      }
+    );
 
     this.startPolling();
   }

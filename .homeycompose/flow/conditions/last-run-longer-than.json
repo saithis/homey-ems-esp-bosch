@@ -1,0 +1,17 @@
+{
+  "title": {
+    "en": "Last compressor run longer than..."
+  },
+  "titleFormatted": {
+    "en": "Last compressor run longer than [[minutes]] minutes"
+  },
+  "args": [
+    {
+      "type": "range",
+      "name": "minutes",
+      "min": 1,
+      "max": 120,
+      "step": 1
+    }
+  ]
+}

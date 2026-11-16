@@ -85,7 +85,7 @@ export function formatLastCode(obj: LastCodeTokens | undefined, desc = false) {
 export function polling<T>(
   intervalMs: number,
   fn: () => Promise<T>,
-  cb: (err: Error | null, res: T | null) => void
+  cb: (err: Error | null, res: T | null) => void | Promise<void>
 ) {
   let stopped = false;
   let timer: NodeJS.Timeout | undefined;
@@ -93,9 +93,9 @@ export function polling<T>(
   (async function poll() {
     if (stopped) return;
     try {
-      cb(null, await fn());
+      await cb(null, await fn());
     } catch (err) {
-      cb(err instanceof Error ? err : new Error(String(err)), null);
+      await cb(err instanceof Error ? err : new Error(String(err)), null);
     } finally {
       if (!stopped) timer = setTimeout(poll, intervalMs);
     }

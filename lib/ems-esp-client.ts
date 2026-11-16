@@ -40,7 +40,7 @@ export class EmsEspClient {
   private async post<T>(path: string, body: T) {
     if (!this.accessToken) throw Error("No access token");
     try {
-      this.mutex.acquire();
+      await this.mutex.acquire();
       return EmsEspClient.checkResponse(
         fetch(`http://${this.networkAddress}/${path}`, {
           method: "POST",
@@ -71,6 +71,26 @@ export class EmsEspClient {
 
   public async setSelectedTemp(temp: number) {
     await this.post("api/thermostat", { cmd: "seltemp", data: temp });
+  }
+
+  public async setHcSelectedTemp(hcId: number, temp: number) {
+    await this.post("api/thermostat", { cmd: "seltemp", hc: hcId, data: temp });
+  }
+
+  public async setHcSummerMode(hcId: number, mode: "summer" | "auto" | "winter") {
+    await this.post("api/thermostat", {
+      cmd: "summersetmode",
+      hc: hcId,
+      data: mode,
+    });
+  }
+
+  public async setHcSummerTemp(hcId: number, temp: number) {
+    await this.post("api/thermostat", { cmd: "summertemp", hc: hcId, data: temp });
+  }
+
+  public async setHcMode(hcId: number, mode: "off" | "manual" | "auto") {
+    await this.post("api/thermostat", { cmd: "mode", hc: hcId, data: mode });
   }
 
   public async getBoilerData(): Promise<BoilerData> {

@@ -30,6 +30,42 @@
   "flow": {
     "conditions": [
       {
+        "title": {
+          "en": "Compressor speed greater than..."
+        },
+        "titleFormatted": {
+          "en": "Compressor speed greater than [[speed]]%"
+        },
+        "args": [
+          {
+            "type": "range",
+            "name": "speed",
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ],
+        "id": "compressor-speed-greater-than"
+      },
+      {
+        "title": {
+          "en": "Compressor speed less than..."
+        },
+        "titleFormatted": {
+          "en": "Compressor speed less than [[speed]]%"
+        },
+        "args": [
+          {
+            "type": "range",
+            "name": "speed",
+            "min": 0,
+            "max": 100,
+            "step": 1
+          }
+        ],
+        "id": "compressor-speed-less-than"
+      },
+      {
         "id": "cooldown-condition-flow",
         "title": {
           "en": "Cooldown"
@@ -68,6 +104,137 @@
             }
           }
         ]
+      },
+      {
+        "title": {
+          "en": "Heating circuit operating mode is..."
+        },
+        "titleFormatted": {
+          "en": "HC[[circuit]] operating mode is [[mode]]"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "circuit",
+            "placeholder": {
+              "en": "Select circuit"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "values": [
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off"
+                }
+              },
+              {
+                "id": "manual",
+                "label": {
+                  "en": "Manual"
+                }
+              },
+              {
+                "id": "auto",
+                "label": {
+                  "en": "Auto"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "hc-mode-is"
+      },
+      {
+        "title": {
+          "en": "Heat pump activity is..."
+        },
+        "titleFormatted": {
+          "en": "Heat pump activity is [[activity]]"
+        },
+        "args": [
+          {
+            "type": "dropdown",
+            "name": "activity",
+            "values": [
+              {
+                "id": "none",
+                "label": {
+                  "en": "None"
+                }
+              },
+              {
+                "id": "heating",
+                "label": {
+                  "en": "Heating"
+                }
+              },
+              {
+                "id": "cooling",
+                "label": {
+                  "en": "Cooling"
+                }
+              },
+              {
+                "id": "hot water",
+                "label": {
+                  "en": "Hot water"
+                }
+              },
+              {
+                "id": "pool",
+                "label": {
+                  "en": "Pool"
+                }
+              },
+              {
+                "id": "defrost",
+                "label": {
+                  "en": "Defrost"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "hpactivity-is"
+      },
+      {
+        "title": {
+          "en": "Last compressor run longer than..."
+        },
+        "titleFormatted": {
+          "en": "Last compressor run longer than [[minutes]] minutes"
+        },
+        "args": [
+          {
+            "type": "range",
+            "name": "minutes",
+            "min": 1,
+            "max": 120,
+            "step": 1
+          }
+        ],
+        "id": "last-run-longer-than"
+      },
+      {
+        "title": {
+          "en": "Last compressor run shorter than..."
+        },
+        "titleFormatted": {
+          "en": "Last compressor run shorter than [[minutes]] minutes"
+        },
+        "args": [
+          {
+            "type": "range",
+            "name": "minutes",
+            "min": 1,
+            "max": 120,
+            "step": 1
+          }
+        ],
+        "id": "last-run-shorter-than"
       },
       {
         "title": {
@@ -175,6 +342,180 @@
         ]
       },
       {
+        "id": "boiler_hpactivity_changed",
+        "title": {
+          "en": "Heat pump activity changed"
+        },
+        "tokens": [
+          {
+            "type": "string",
+            "name": "old_activity",
+            "title": {
+              "en": "Previous activity"
+            },
+            "example": {
+              "en": "heating"
+            }
+          },
+          {
+            "type": "string",
+            "name": "new_activity",
+            "title": {
+              "en": "New activity"
+            },
+            "example": {
+              "en": "hot water"
+            }
+          },
+          {
+            "type": "number",
+            "name": "outdoor_temp",
+            "title": {
+              "en": "Outdoor temperature"
+            },
+            "example": {
+              "en": "12"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=boiler"
+          }
+        ]
+      },
+      {
+        "id": "boiler_compressor_turned_off",
+        "title": {
+          "en": "Compressor turned off"
+        },
+        "tokens": [
+          {
+            "type": "number",
+            "name": "outdoor_temp",
+            "title": {
+              "en": "Outdoor temperature"
+            },
+            "example": {
+              "en": "12"
+            }
+          },
+          {
+            "type": "number",
+            "name": "run_duration_minutes",
+            "title": {
+              "en": "Run duration (minutes)"
+            },
+            "example": {
+              "en": "8.5"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=boiler"
+          }
+        ]
+      },
+      {
+        "id": "boiler_compressor_turned_on",
+        "title": {
+          "en": "Compressor turned on"
+        },
+        "tokens": [
+          {
+            "type": "number",
+            "name": "outdoor_temp",
+            "title": {
+              "en": "Outdoor temperature"
+            },
+            "example": {
+              "en": "12"
+            }
+          },
+          {
+            "type": "number",
+            "name": "off_duration_minutes",
+            "title": {
+              "en": "Off duration (minutes)"
+            },
+            "example": {
+              "en": "3.2"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=boiler"
+          }
+        ]
+      },
+      {
+        "id": "boiler_wwcurtemp_changed",
+        "title": {
+          "en": "Tap water temperature changed"
+        },
+        "titleFormatted": {
+          "en": "Tap water temperature changed by at least [[min_delta]]°C"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=boiler"
+          },
+          {
+            "type": "range",
+            "name": "min_delta",
+            "min": 0.1,
+            "max": 5,
+            "step": 0.1,
+            "label": {
+              "en": "°C"
+            },
+            "labelDecimals": 1
+          }
+        ],
+        "tokens": [
+          {
+            "type": "number",
+            "name": "wwcurtemp",
+            "title": {
+              "en": "Tap water temperature"
+            },
+            "example": {
+              "en": "48.5"
+            }
+          },
+          {
+            "type": "number",
+            "name": "ww_target_temp",
+            "title": {
+              "en": "Tap water target temperature"
+            },
+            "example": {
+              "en": "55"
+            }
+          },
+          {
+            "type": "number",
+            "name": "outdoor_temp",
+            "title": {
+              "en": "Outdoor temperature"
+            },
+            "example": {
+              "en": "12"
+            }
+          }
+        ]
+      },
+      {
         "id": "thermostat_hc1_hpoperatingstate_changed",
         "title": {
           "en": "Heatpump operating state changed"
@@ -198,6 +539,272 @@
             "filter": "driver_id=thermostat"
           }
         ]
+      },
+      {
+        "id": "thermostat_outdoor_temp_crossed_above",
+        "title": {
+          "en": "Outdoor temperature went above..."
+        },
+        "titleFormatted": {
+          "en": "Outdoor temperature went above [[temp]]°C"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=thermostat"
+          },
+          {
+            "type": "number",
+            "name": "temp",
+            "placeholder": {
+              "en": "0"
+            },
+            "min": -50,
+            "max": 50,
+            "step": 0.5
+          }
+        ],
+        "tokens": [
+          {
+            "type": "number",
+            "name": "outdoor_temp",
+            "title": {
+              "en": "Outdoor temperature"
+            },
+            "example": {
+              "en": "12"
+            }
+          }
+        ]
+      },
+      {
+        "id": "thermostat_outdoor_temp_crossed_below",
+        "title": {
+          "en": "Outdoor temperature went below..."
+        },
+        "titleFormatted": {
+          "en": "Outdoor temperature went below [[temp]]°C"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=thermostat"
+          },
+          {
+            "type": "number",
+            "name": "temp",
+            "placeholder": {
+              "en": "0"
+            },
+            "min": -50,
+            "max": 50,
+            "step": 0.5
+          }
+        ],
+        "tokens": [
+          {
+            "type": "number",
+            "name": "outdoor_temp",
+            "title": {
+              "en": "Outdoor temperature"
+            },
+            "example": {
+              "en": "5"
+            }
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "thermostat_set_hc_target_temp",
+        "title": {
+          "en": "Set heating circuit target temperature"
+        },
+        "titleFormatted": {
+          "en": "Set HC[[circuit]] target temperature to [[temperature]]°C"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=thermostat"
+          },
+          {
+            "type": "autocomplete",
+            "name": "circuit",
+            "placeholder": {
+              "en": "Select circuit"
+            }
+          },
+          {
+            "type": "range",
+            "name": "temperature",
+            "min": 5,
+            "max": 30,
+            "step": 0.5,
+            "label": "°C",
+            "labelDecimals": 1,
+            "title": {
+              "en": "Temperature"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "type": "number",
+            "name": "old_temperature",
+            "title": {
+              "en": "Previous temperature"
+            },
+            "example": {
+              "en": "21"
+            }
+          }
+        ]
+      },
+      {
+        "id": "thermostat_adjust_hc_target_temp_offset",
+        "title": {
+          "en": "Adjust heating circuit target temperature"
+        },
+        "titleFormatted": {
+          "en": "Adjust HC[[circuit]] target temperature by [[offset]]°C"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=thermostat"
+          },
+          {
+            "type": "autocomplete",
+            "name": "circuit",
+            "placeholder": {
+              "en": "Select circuit"
+            }
+          },
+          {
+            "type": "range",
+            "name": "offset",
+            "min": -5,
+            "max": 5,
+            "step": 0.5,
+            "label": "°C",
+            "labelDecimals": 1,
+            "title": {
+              "en": "Offset"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "type": "number",
+            "name": "old_temperature",
+            "title": {
+              "en": "Previous temperature"
+            },
+            "example": {
+              "en": "21"
+            }
+          }
+        ]
+      },
+      {
+        "id": "thermostat_set_hc_summer_mode",
+        "title": {
+          "en": "Set heating circuit summer mode"
+        },
+        "titleFormatted": {
+          "en": "Set HC[[circuit]] summer mode to [[mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=thermostat"
+          },
+          {
+            "type": "autocomplete",
+            "name": "circuit",
+            "placeholder": {
+              "en": "Select circuit"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "values": [
+              {
+                "id": "summer",
+                "label": {
+                  "en": "Summer"
+                }
+              },
+              {
+                "id": "auto",
+                "label": {
+                  "en": "Auto"
+                }
+              },
+              {
+                "id": "winter",
+                "label": {
+                  "en": "Winter"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "thermostat_set_hc_mode",
+        "title": {
+          "en": "Set heating circuit operating mode"
+        },
+        "titleFormatted": {
+          "en": "Set HC[[circuit]] operating mode to [[mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=thermostat"
+          },
+          {
+            "type": "autocomplete",
+            "name": "circuit",
+            "placeholder": {
+              "en": "Select circuit"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "values": [
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off"
+                }
+              },
+              {
+                "id": "manual",
+                "label": {
+                  "en": "Manual"
+                }
+              },
+              {
+                "id": "auto",
+                "label": {
+                  "en": "Auto"
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -216,6 +823,9 @@
         "boiler_hpcircspd",
         "boiler_hpcompspd",
         "boiler_wwcurtemp",
+        "boiler_ww_target_temp",
+        "boiler_hpactivity",
+        "boiler_last_compressor_run_duration",
         "boiler_lastcode"
       ],
       "platforms": [
@@ -406,6 +1016,16 @@
       "insights": true,
       "icon": "/assets/thermometer.svg"
     },
+    "boiler_hpactivity": {
+      "type": "string",
+      "title": {
+        "en": "Heat pump activity"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "icon": "/assets/state.svg"
+    },
     "boiler_hpbrinein": {
       "type": "number",
       "title": {
@@ -487,6 +1107,21 @@
       "insights": true,
       "icon": "/assets/pump.svg"
     },
+    "boiler_last_compressor_run_duration": {
+      "type": "number",
+      "title": {
+        "en": "Last compressor run duration"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "min"
+      },
+      "min": 0,
+      "decimals": 1,
+      "insights": true,
+      "icon": "/assets/pump.svg"
+    },
     "boiler_lastcode": {
       "type": "string",
       "title": {
@@ -503,6 +1138,20 @@
       "title": {
         "en": "Return temp",
         "sv": "Returtemp"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "°C"
+      },
+      "decimals": 1,
+      "insights": true,
+      "icon": "/assets/thermometer.svg"
+    },
+    "boiler_ww_target_temp": {
+      "type": "number",
+      "title": {
+        "en": "Tap water target temp"
       },
       "getable": true,
       "setable": false,

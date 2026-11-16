@@ -1,0 +1,22 @@
+{
+  "title": {
+    "en": "Heat pump activity is..."
+  },
+  "titleFormatted": {
+    "en": "Heat pump activity is [[activity]]"
+  },
+  "args": [
+    {
+      "type": "dropdown",
+      "name": "activity",
+      "values": [
+        { "id": "none", "label": { "en": "None" } },
+        { "id": "heating", "label": { "en": "Heating" } },
+        { "id": "cooling", "label": { "en": "Cooling" } },
+        { "id": "hot water", "label": { "en": "Hot water" } },
+        { "id": "pool", "label": { "en": "Pool" } },
+        { "id": "defrost", "label": { "en": "Defrost" } }
+      ]
+    }
+  ]
+}
