@@ -80,6 +80,12 @@ class ThermostatDriver extends Homey.Driver {
         );
         device.restartPollingAfterWrite();
         await device.client.setHcSelectedTemp(hcId, args.temperature);
+        if (hcData) {
+          hcData.seltemp = args.temperature;
+          if (hcData.mode === "manual") {
+            hcData.manualtemp = args.temperature;
+          }
+        }
         return { old_temperature: oldTemp };
       }
     );
@@ -104,7 +110,11 @@ class ThermostatDriver extends Homey.Driver {
         if (!hcData) {
           throw new Error(`Heating circuit HC${hcId} not found`);
         }
-        const currentTemp = hcData.seltemp;
+        const minValidTemp = hcData.nofrosttemp ?? 5;
+        const currentTemp =
+          hcData.seltemp > minValidTemp
+            ? hcData.seltemp
+            : hcData.comforttemp || hcData.manualtemp || hcData.ecotemp || 21;
         const newTemp = Math.min(30, Math.max(5, currentTemp + args.offset));
         if (newTemp !== currentTemp + args.offset) {
           this.log(
@@ -116,6 +126,10 @@ class ThermostatDriver extends Homey.Driver {
         );
         device.restartPollingAfterWrite();
         await device.client.setHcSelectedTemp(hcId, newTemp);
+        hcData.seltemp = newTemp;
+        if (hcData.mode === "manual") {
+          hcData.manualtemp = newTemp;
+        }
         return { old_temperature: currentTemp };
       }
     );
@@ -137,6 +151,7 @@ class ThermostatDriver extends Homey.Driver {
         const device = args.device;
         const hcId = Number(args.circuit.id);
         this.log(`Setting HC${hcId} summer mode to ${args.mode}`);
+        device.restartPollingAfterWrite();
         await device.client.setHcSummerMode(hcId, args.mode);
       }
     );
@@ -157,8 +172,40 @@ class ThermostatDriver extends Homey.Driver {
       }) => {
         const device = args.device;
         const hcId = Number(args.circuit.id);
+        const hcData = device.getHcData(hcId);
         this.log(`Setting HC${hcId} operating mode to ${args.mode}`);
+        device.restartPollingAfterWrite();
+
+        // On Bosch RC300/UI800 controllers, EMS-ESP implements "off" mode by switching
+        // to manual mode with manualtemp = 0°C. When switching back to "manual", restore
+        // manualtemp if it was left at <= nofrosttemp (e.g. 0°C), otherwise the controller
+        // remains in "off" state.
+        if (args.mode === "manual" && hcData) {
+          const minValidTemp = hcData.nofrosttemp ?? 5;
+          if (hcData.manualtemp == null || hcData.manualtemp <= minValidTemp) {
+            const fallbackTemp =
+              hcData.comforttemp ||
+              hcData.ecotemp ||
+              (hcData.seltemp > minValidTemp ? hcData.seltemp : 21);
+            this.log(
+              `Restoring HC${hcId} manualtemp from ${hcData.manualtemp}°C to ${fallbackTemp}°C before entering manual mode`
+            );
+            await device.client.setHcManualTemp(hcId, fallbackTemp);
+            hcData.manualtemp = fallbackTemp;
+          }
+        }
+
         await device.client.setHcMode(hcId, args.mode);
+        if (hcData) {
+          hcData.mode = args.mode;
+          if (args.mode === "off") {
+            hcData.seltemp = 0;
+          } else if (args.mode === "manual" && hcData.manualtemp) {
+            hcData.seltemp = hcData.manualtemp;
+          } else if (args.mode === "auto" && hcData.comforttemp) {
+            hcData.seltemp = hcData.comforttemp;
+          }
+        }
       }
     );
   }

@@ -77,6 +77,14 @@ export class EmsEspClient {
     await this.post("api/thermostat", { cmd: "seltemp", hc: hcId, data: temp });
   }
 
+  public async setHcManualTemp(hcId: number, temp: number) {
+    await this.post("api/thermostat", {
+      cmd: "manualtemp",
+      hc: hcId,
+      data: temp,
+    });
+  }
+
   public async setHcSummerMode(hcId: number, mode: "summer" | "auto" | "winter") {
     await this.post("api/thermostat", {
       cmd: "summersetmode",

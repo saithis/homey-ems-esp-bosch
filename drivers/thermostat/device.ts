@@ -18,16 +18,23 @@ class ThermostatDevice extends Homey.Device {
 
   // Multi-circuit support
   public detectedCircuits: number[] = [];
+  private _client: EmsEspClient | null = null;
+  private _clientKey: string = "";
+  private restartTimer: ReturnType<typeof setTimeout> | null = null;
 
   private get intervalMs() {
     return Number(this.getSetting("poll_interval") || 10000);
   }
 
   public get client() {
-    return new EmsEspClient(
-      this.getSetting("network_address"),
-      this.getSetting("access_token")
-    );
+    const addr = this.getSetting("network_address");
+    const token = this.getSetting("access_token");
+    const key = `${addr}|${token}`;
+    if (!this._client || this._clientKey !== key) {
+      this._client = new EmsEspClient(addr, token);
+      this._clientKey = key;
+    }
+    return this._client;
   }
 
   private detectCircuits(data: ThermostatData) {
@@ -50,6 +57,10 @@ class ThermostatDevice extends Homey.Device {
   }
 
   private startPolling() {
+    if (this.restartTimer) {
+      clearTimeout(this.restartTimer);
+      this.restartTimer = null;
+    }
     this.stopPolling?.();
 
     this.stopPolling = polling(
@@ -60,7 +71,10 @@ class ThermostatDevice extends Homey.Device {
           this.error(err);
           await this.setUnavailable(`${err}`).catch(this.error);
           // Automatically restart polling after the interval to recover from errors.
-          setTimeout(() => this.startPolling(), this.intervalMs * 2);
+          this.restartTimer = setTimeout(
+            () => this.startPolling(),
+            this.intervalMs * 2
+          );
           return;
         } else if (res) {
           this.detectCircuits(res);
@@ -74,7 +88,10 @@ class ThermostatDevice extends Homey.Device {
 
   public restartPollingAfterWrite() {
     this.stopPolling?.();
-    setTimeout(() => this.startPolling(), this.intervalMs);
+    if (this.restartTimer) {
+      clearTimeout(this.restartTimer);
+    }
+    this.restartTimer = setTimeout(() => this.startPolling(), this.intervalMs);
   }
 
   private async triggerFlows(newData: ThermostatData) {
@@ -156,15 +173,15 @@ class ThermostatDevice extends Homey.Device {
           this.log(`Don't update selected temperature, is already ${value}°C`);
           return;
         }
-        this.stopPolling?.();
-        await this.client.setHcSelectedTemp(1, value).catch(this.error);
+        this.restartPollingAfterWrite();
+        await this.client.setHcSelectedTemp(1, value);
+        if (this.oldData?.hc1) {
+          this.oldData.hc1.seltemp = value;
+        }
         this.log(`Selected temperature updated to ${value}°C`);
       } catch (err) {
         this.error("Failed to update selected temperature", err);
         this.setUnavailable(`${err}`).catch(this.error);
-      } finally {
-        // Don't start polling until the thermostat has been updated
-        setTimeout(() => this.startPolling(), this.intervalMs);
       }
     });
 
@@ -204,6 +221,10 @@ class ThermostatDevice extends Homey.Device {
   }
 
   onDeleted() {
+    if (this.restartTimer) {
+      clearTimeout(this.restartTimer);
+      this.restartTimer = null;
+    }
     this.stopPolling?.();
   }
 }

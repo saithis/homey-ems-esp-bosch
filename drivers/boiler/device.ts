@@ -31,11 +31,18 @@ export class BoilerDevice extends Homey.Device {
   private compressorTurnedOnTrigger: Homey.FlowCardTriggerDevice | undefined;
   private wwcurtempChangedTrigger: Homey.FlowCardTriggerDevice | undefined;
 
+  private _client: EmsEspClient | null = null;
+  private _clientKey: string = "";
+
   private get client() {
-    return new EmsEspClient(
-      this.getSetting("network_address"),
-      this.getSetting("access_token")
-    );
+    const addr = this.getSetting("network_address");
+    const token = this.getSetting("access_token");
+    const key = `${addr}|${token}`;
+    if (!this._client || this._clientKey !== key) {
+      this._client = new EmsEspClient(addr, token);
+      this._clientKey = key;
+    }
+    return this._client;
   }
 
   private get intervalMs() {
